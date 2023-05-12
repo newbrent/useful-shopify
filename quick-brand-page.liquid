@@ -1,0 +1,120 @@
+{% assign counter = 0 %}
+{% for vendor in shop.vendors %}
+{% assign counter = counter | plus: 1 %}
+{% endfor %}
+
+{% assign counter_divided_by_3 = counter | divided_by: 3 | floor %}
+
+<ul class="letters">
+				<li class="active"><a data-link="all" href="javascript:;">All</a></li>
+				<li ><a data-link="A"  href="javascript:;">A</a></li>
+				<li ><a data-link="B"  href="javascript:;">B</a></li>
+				<li ><a data-link="C"  href="javascript:;">C</a></li>
+				<li ><a  data-link="D" href="javascript:;">D</a></li>
+				<li ><a  data-link="E" href="javascript:;">E</a></li>
+				<li ><a  data-link="F" href="javascript:;">F</a></li>
+				<li ><a  data-link="G" href="javascript:;">G</a></li>
+				<li ><a  data-link="H" href="javascript:;">H</a></li>
+				<li ><a  data-link="I" href="javascript:;">I</a></li>
+				<li ><a  data-link="J" href="javascript:;">J</a></li>
+				<li ><a  data-link="K" href="javascript:;">K</a></li>
+				<li ><a  data-link="L" href="javascript:;">L</a></li>
+				<li ><a  data-link="M" href="javascript:;">M</a></li>
+				<li ><a  data-link="N" href="javascript:;">N</a></li>
+				<li ><a  data-link="O" href="javascript:;">O</a></li>
+				<li ><a  data-link="P" href="javascript:;">P</a></li>
+				<li ><a  data-link="Q" href="javascript:;">Q</a></li>
+				<li ><a  data-link="R" href="javascript:;">R</a></li>
+				<li ><a  data-link="S" href="javascript:;">S</a></li>
+				<li ><a  data-link="T" href="javascript:;">T</a></li>
+				<li ><a  data-link="U" href="javascript:;">U</a></li>
+				<li ><a  data-link="V" href="javascript:;">V</a></li>
+				<li ><a  data-link="W" href="javascript:;">W</a></li>
+				<li ><a  data-link="X" href="javascript:;">X</a></li>
+				<li ><a  data-link="Y" href="javascript:;">Y</a></li>
+				<li ><a  data-link="Z" href="javascript:;">Z</a></li>
+				<li ><a  data-link="number" href="javascript:;">#</a></li>
+			</ul>
+    <div class="brand_cover">
+    <div class="brands-list">
+      
+      {% for product_vendor in shop.vendors %}
+      
+          {% assign its_a_match = false %}
+          {% capture my_collection_handle %} {{ product_vendor | handleize | strip | escape  }} {% endcapture %}
+          {% assign my_collection_handle = my_collection_handle | strip | escape %}
+
+
+          {% for collection in collections %}
+            {% if my_collection_handle == collection.handle %}
+            	{% assign its_a_match = true %}
+            {% endif %}
+          {% endfor %}
+
+      
+          {% if its_a_match %}            
+          <li class="{{ product_vendor | slice: 0, 1  }}"><a href="/collections/{{ my_collection_handle }}">{{ product_vendor }}</a></li>
+
+          {% else %}            
+          <li class="{{ product_vendor | slice: 0, 1  }}"><a href="/collections/{{ my_collection_handle }}">{{ product_vendor }}</a></li>
+           
+          {% endif %}
+      
+      {% endfor %}
+
+    </div>
+    </div>
+  </div>
+</article>
+
+<script>
+  window.onload = function() {
+    if (window.jQuery) {  
+        // jQuery is loaded  
+        $(document).ready(function(){
+    
+    // Wrap all same class tag in a DIV with class name
+    $(".letters a").each(function(){
+      	var link = $(this).data("link");
+      if($(".brands-list li."+link).length){ // If tag exist
+      	$(".brands-list li."+link).wrapAll('<div class="column brand_'+link+'"><ul class="inner-list">');
+      	$(".brand_"+link).prepend("<h2 class='brand_title'>"+link+"</h2>");
+      }else{ // If tag not exist
+      	$(".brands-list").append('<div class="column brand_'+link+'"><h2 class="brand_title">'+link+'</h2><ul class="inner-list"><li class="'+link+'"><a href="javascript:;">No Brand Found</a></li></ul></div>')
+      
+      }
+    })
+    
+    // Wrap all remaining Tags like start with numbers and special characters
+    $(".brands-list > li").wrapAll('<div class="column brand_number"><ul class="inner-list">');
+    $(".brand_number").prepend("<h2 class='brand_title'>#</h2>");
+    
+    // Move number list to last
+    $(".brand_number").appendTo(".brands-list");
+    
+	// Make content visible after load    
+    $(".brand_cover").css("opacity",1);
+    
+    
+    // hide/show respective list on click of Alphabets
+    $('.brands').on('click', '.letters li:not(.disabled) a', function(e) {
+      e.preventDefault();
+      $(".letters li.active").removeClass("active")
+	  $(this).parent().addClass("active");
+
+      var link = $(this).data("link");
+      
+      if(link == "all") { $(".column").show();}
+      else { 
+          $(".column").hide();
+          $(".brand_"+link).show();
+      }
+    });
+});
+    } else {
+        // jQuery is not loaded
+        
+    }
+}
+  
+</script>
